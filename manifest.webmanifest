@@ -1,0 +1,39 @@
+{
+ "name": "PHILHEALTH KING",
+ "short_name": "PHILHEALTH KING",
+ "id": "./",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#0d1a3a",
+ "theme_color": "#0d1a3a",
+ "orientation": "portrait",
+ "lang": "en",
+ "version": "2.1.2",
+ "description": "PhilHealth EENT case rates, OR calendar and PF log, with optional Google Drive sync. By Dr. Juan Carlo Navarrete.",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "icons/apple-touch-icon.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  }
+ ]
+}

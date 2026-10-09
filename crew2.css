@@ -1,0 +1,24 @@
+/* v2.1 preview crew dock: ONE static painted doctor (the user's pick) in a reserved bottom-left corner, talking only (crew.js) */
+#crewdock{position:fixed;left:0;right:0;top:0;bottom:0;z-index:9;pointer-events:none;contain:layout}
+#crewdock .cd-doc{position:absolute;bottom:calc(64px + env(safe-area-inset-bottom));padding:0;margin:0;border:0;background:none;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+#crewdock .cd-doc{left:2px}
+#crewdock .cd-img{position:relative;display:block;width:100%;height:100%;z-index:1;pointer-events:none}
+#crewdock .cd-shadow{position:absolute;left:20%;right:20%;bottom:-2px;height:8px;border-radius:50%;background:radial-gradient(closest-side,rgba(40,30,20,.32),transparent)}
+[data-theme=dark] #crewdock .cd-shadow{background:radial-gradient(closest-side,rgba(255,210,140,.22),transparent)}
+[data-theme=dark] #crewdock .cd-img{filter:drop-shadow(0 0 1.2px rgba(255,236,200,.6))}
+#crewdock .cd-doc:focus-visible{outline:2px solid var(--coral);outline-offset:2px;border-radius:8px}
+#crewdock.away .cd-doc,#crewdock.away .cm-bub,#crewdock.away .cd-emo{opacity:0;visibility:hidden;pointer-events:none}
+#crewdock .cd-doc{transition:opacity .18s,visibility .18s}
+body.pk-welcome #crewdock{display:none!important}
+#crewdock .cm-bub{position:absolute;z-index:3}
+#crewdock .cm-bub.cd-pop .cm-bt{display:inline-block;animation:cd-pop .28s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes cd-pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+#crewdock .cd-emo{position:absolute;left:0;top:0;width:30px;height:34px;z-index:2;pointer-events:none}
+#crewdock .cd-emo i{display:block;font-style:normal;font-size:28px;line-height:34px;text-align:center;will-change:transform,opacity;animation:cd-emo 2.4s cubic-bezier(.22,.7,.3,1) both;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
+@keyframes cd-emo{0%{opacity:0;transform:translate3d(0,8px,0) scale(.6)}12%{opacity:1;transform:translate3d(0,0,0) scale(1.08)}22%{transform:translate3d(0,-6px,0) scale(1)}75%{opacity:1}100%{opacity:0;transform:translate3d(0,-58px,0) scale(1)}}
+#crewdock .cd-emo.rm i{animation:cd-emorm 2.4s linear both}
+@keyframes cd-emorm{0%,100%{opacity:0}10%,80%{opacity:1}}
+.view{padding-bottom:calc(var(--crew-h,124px) + 30px)!important}   /* reserved corner: the last rows always scroll clear above the doctor */
+html.crew-off .view{padding-bottom:100px!important}
+@media (prefers-reduced-motion:reduce){#crewdock .cm-bub.cd-pop .cm-bt{animation:none}}
+.crewcard.on .pfig,.crewcard.on .chibi{animation:none!important}   /* doctors never bob: talking is the only animation */

@@ -1,0 +1,119 @@
+/* PHILHEALTH KING motion + vibrancy layer (v1.0.0). GPU-friendly: animates transform/opacity only (one-shot highlight shimmer
+   uses a transformed pseudo-element). Ambient loops pause when idle/backgrounded (html.m-idle). Reduced motion -> instant/fade. */
+:root{--m-spring:cubic-bezier(.34,1.56,.64,1);--m-out:cubic-bezier(.22,1,.36,1);--m-in:cubic-bezier(.55,0,1,.45)}
+
+/* ---------- vibrancy ---------- */
+[data-theme=dark]{--line-d:#38c8ee;--id:#8be6ff;--teal:#62f5de;--zeny:#ffd84a;--gold:#ffd84a;--coral:#ff6a55;--coral-ink:#ffa392;
+  --tb1:#0c5f93;--tb2:#04264a;--rope2:#1f9cc9;--glow:rgba(255,106,85,.55);--title:#ffd84a;--line:#1f6f98}
+[data-theme=light]{--tb1:#8fe0ff;--tb2:#1fa3ec;--rope2:#2fb2e6;--line-d:#1d78b0;--glow:rgba(255,100,70,.45)}
+[data-theme=dark] .menubar a.on{box-shadow:0 0 0 1px var(--coral),0 0 16px rgba(255,106,85,.6),inset 0 0 10px rgba(255,106,85,.25)}
+[data-theme=dark] .tab.on,[data-theme=dark] .chipbtn.on{box-shadow:0 0 12px rgba(255,106,85,.45)}
+/* (no blurred glow on whole panels: large blurred shadows are costly to repaint on software-composited WebViews) */
+[data-theme=dark] .qd.sel{box-shadow:0 0 0 2px var(--coral),0 0 14px rgba(255,106,85,.55)}
+[data-theme=dark] .qd.today{box-shadow:0 0 12px rgba(98,245,222,.45)}
+[data-theme=dark] .qsum-pf b,[data-theme=dark] .zeny,[data-theme=dark] .pk-title{text-shadow:0 0 10px rgba(255,216,74,.45)}
+[data-theme=dark] .paypill.paid{box-shadow:0 0 10px rgba(98,245,222,.45)}
+[data-theme=dark] .pxbar{box-shadow:0 0 12px rgba(255,216,74,.25)}
+
+/* ---------- rendering cost: skip layout/paint of off-screen rows ---------- */
+#list>.row,.lp-e,.qe,.prow{content-visibility:auto;contain-intrinsic-size:auto 58px}
+
+/* ---------- press states + ripple ---------- */
+.rbtn,.tab,.chipbtn,.menubar a,.paypill,.qd,.tbx,.crewbtn,.icoopt,.linkbtn{transition:transform .14s var(--m-out)}
+.rbtn:active,.tab:active,.chipbtn:active,.paypill:active,.qd:active,.tbx:active,.crewbtn:active,.icoopt:active{transform:scale(.94)}
+.menubar a:active{transform:scale(.9)}
+.m-rh{position:relative;overflow:hidden}
+.m-rip{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(140,240,255,.55) 0,rgba(140,240,255,.25) 45%,transparent 70%);
+  transform:translate(-50%,-50%) scale(0);opacity:1;animation:m-rip .5s var(--m-out) forwards;z-index:0}
+[data-theme=light] .m-rip{background:radial-gradient(circle,rgba(0,140,220,.35) 0,rgba(0,140,220,.15) 45%,transparent 70%)}
+@keyframes m-rip{to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+
+/* ---------- view transitions ---------- */
+.view.m-vr{animation:m-vr .32s var(--m-out) both}
+.view.m-vl{animation:m-vl .32s var(--m-out) both}
+.view.m-vf{animation:m-vf .26s var(--m-out) both}
+@keyframes m-vr{from{transform:translate3d(28px,0,0);opacity:0}to{transform:none;opacity:1}}
+@keyframes m-vl{from{transform:translate3d(-28px,0,0);opacity:0}to{transform:none;opacity:1}}
+@keyframes m-vf{from{transform:translate3d(0,10px,0);opacity:0}to{transform:none;opacity:1}}
+.m-spr{animation:m-spr .5s var(--m-spring) both;animation-delay:calc(var(--i,0) * 45ms)}
+@keyframes m-spr{from{transform:translate3d(var(--sx,0px),16px,0) scale(.97);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
+.m-row{animation:m-row .28s var(--m-out) both;animation-delay:calc(90ms + var(--i,0) * 24ms)}
+@keyframes m-row{from{opacity:0}to{opacity:1}}
+
+/* ---------- calendar ---------- */
+.qgrid{touch-action:pan-y;will-change:auto}
+.qgrid.m-drag{transition:none}
+.qgrid.m-snap{transition:transform .28s var(--m-spring),opacity .2s}
+.qgrid.m-out{transition:transform .16s var(--m-in),opacity .16s}
+.qgrid.m-inr{animation:m-inr .36s var(--m-out) both}
+.qgrid.m-inl{animation:m-inl .36s var(--m-out) both}
+@keyframes m-inr{from{transform:translate3d(40%,0,0);opacity:0}to{transform:none;opacity:1}}
+@keyframes m-inl{from{transform:translate3d(-40%,0,0);opacity:0}to{transform:none;opacity:1}}
+.qd.m-pop{animation:m-pop .42s var(--m-spring)}
+@keyframes m-pop{0%{transform:scale(.78)}100%{transform:scale(1)}}
+
+/* ---------- sheets, lock, toasts ---------- */
+#pksheet.show{animation:m-fade .22s ease-out both}
+#pksheet.show .sheetwin{animation:m-up .38s var(--m-out) both}
+#pklock.show{animation:m-fade .2s ease-out both}
+@keyframes m-fade{from{opacity:0}to{opacity:1}}
+@keyframes m-up{from{transform:translate3d(0,100%,0)}to{transform:none}}
+.toast.show{animation:m-toast .5s var(--m-spring) both}
+@keyframes m-toast{from{transform:translate(-50%,26px) scale(.85);opacity:0}to{transform:translate(-50%,0) scale(1);opacity:1}}
+.bkrem{animation:m-spr .5s var(--m-spring) both}
+
+/* ---------- WANTED poster, highlight shimmer ---------- */
+.wanted{animation:m-drop .9s var(--m-out) both;transform-origin:50% -24px}
+@keyframes m-drop{0%{transform:translate3d(0,-70px,0) rotate(-7deg);opacity:0}35%{opacity:1}55%{transform:translate3d(0,4px,0) rotate(4deg)}75%{transform:rotate(-2deg)}90%{transform:rotate(.8deg)}100%{transform:none;opacity:1}}
+mark{position:relative;display:inline-block;overflow:hidden;vertical-align:baseline;line-height:inherit}
+mark:after{content:"";position:absolute;top:0;bottom:0;left:0;width:60%;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);
+  transform:translate3d(-120%,0,0);animation:m-shim .8s .1s ease-out 1 forwards}
+@keyframes m-shim{to{transform:translate3d(260%,0,0)}}
+
+/* ---------- header sea (ambient) ---------- */
+.hdr .hdr-body{overflow:hidden}
+.hdr .hdr-body>*{position:relative;z-index:1}
+.hdr .hdr-body>.m-sky{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hdr .hdr-body:after{left:-48px;right:0;z-index:1;animation:m-wave 3.2s linear infinite}
+@keyframes m-wave{from{transform:translate3d(0,0,0)}to{transform:translate3d(24px,0,0)}}
+.m-sky i{position:absolute;display:block;pointer-events:none}
+[data-theme=dark] .m-sky .st{width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px 1px rgba(160,230,255,.9);opacity:.2;animation:m-tw 2.6s ease-in-out infinite alternate}
+[data-theme=dark] .m-sky .cl,[data-theme=dark] .m-sky .sun{display:none}
+[data-theme=light] .m-sky .st{display:none}
+[data-theme=light] .m-sky .cl{width:54px;height:16px;border-radius:10px;background:#fff;opacity:.85;box-shadow:14px -6px 0 -2px #fff,-12px -3px 0 -4px #fff;animation:m-cloud 26s linear infinite}
+[data-theme=light] .m-sky .sun{right:14px;top:-26px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(255,236,140,.95) 0,rgba(255,210,90,.55) 35%,rgba(255,200,80,0) 70%);animation:m-sun 5s ease-in-out infinite alternate}
+@keyframes m-tw{from{opacity:.15;transform:scale(.6)}to{opacity:1;transform:scale(1.15)}}
+@keyframes m-cloud{from{transform:translate3d(-80px,0,0)}to{transform:translate3d(460px,0,0)}}
+@keyframes m-sun{from{opacity:.65;transform:scale(.92)}to{opacity:1;transform:scale(1.08)}}
+/* m-idle / m-busy holds: perf.css (.pk-h) */
+
+/* ---------- particles (fixed overlay) ---------- */
+#mfx{position:fixed;inset:0;pointer-events:none;z-index:9500;overflow:hidden;contain:strict}
+#mfx i{position:absolute;left:0;top:0;display:block;will-change:transform,opacity}
+#mfx .coin{width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7c2 0,#ffd84a 38%,#e09a00 75%,#9a6200 100%);
+  box-shadow:0 0 10px rgba(255,216,74,.8);animation:m-coin .8s var(--m-out) forwards}
+@keyframes m-coin{0%{transform:translate3d(var(--x0),var(--y0),0) scale(.4) rotateY(0);opacity:1}60%{opacity:1}100%{transform:translate3d(calc(var(--x0) + var(--dx)),calc(var(--y0) + var(--dy)),0) scale(1) rotateY(540deg);opacity:0}}
+#mfx .chk{width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:#1fd6b4;color:#00261f;font:700 22px/34px sans-serif;text-align:center;
+  box-shadow:0 0 0 3px rgba(255,255,255,.85),0 0 22px rgba(98,245,222,.9);animation:m-chk .9s var(--m-spring) forwards}
+@keyframes m-chk{0%{transform:translate3d(var(--x0),var(--y0),0) scale(0);opacity:1}35%{transform:translate3d(var(--x0),calc(var(--y0) - 26px),0) scale(1.15)}75%{opacity:1}100%{transform:translate3d(var(--x0),calc(var(--y0) - 40px),0) scale(1);opacity:0}}
+#mfx .drop{width:9px;height:9px;margin:-4px 0 0 -4px;border-radius:50% 50% 50% 0;background:radial-gradient(circle at 35% 30%,#e8ffff,#40d8f5 55%,#0a8fd0);box-shadow:0 0 8px rgba(64,216,245,.8);animation:m-drop2 .75s var(--m-out) forwards}
+@keyframes m-drop2{0%{transform:translate3d(var(--x0),var(--y0),0) scale(.3) rotate(-45deg);opacity:1}100%{transform:translate3d(calc(var(--x0) + var(--dx)),calc(var(--y0) + var(--dy)),0) scale(1) rotate(-45deg);opacity:0}}
+#mfx .ring{width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:3px solid rgba(120,235,255,.9);box-shadow:0 0 16px rgba(120,235,255,.7);animation:m-ringx .6s var(--m-out) forwards}
+@keyframes m-ringx{0%{transform:translate3d(var(--x0),var(--y0),0) scale(.2);opacity:1}100%{transform:translate3d(var(--x0),var(--y0),0) scale(1.4);opacity:0}}
+#mfx .spk{width:10px;height:10px;margin:-5px 0 0 -5px;background:#fff6b0;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:m-spk .7s var(--m-out) forwards}
+@keyframes m-spk{0%{transform:translate3d(var(--x0),var(--y0),0) scale(.2) rotate(0);opacity:1}100%{transform:translate3d(calc(var(--x0) + var(--dx)),calc(var(--y0) + var(--dy)),0) scale(1.1) rotate(180deg);opacity:0}}
+#mfx .bty{font-family:var(--px);font-size:24px;color:#ffd84a;white-space:nowrap;text-shadow:0 2px 0 #3b2412,0 0 12px rgba(255,216,74,.8);animation:m-bty 1.5s var(--m-out) forwards}
+@keyframes m-bty{0%{transform:translate3d(var(--x0),var(--y0),0) translateX(-50%) scale(.5);opacity:0}15%{transform:translate3d(var(--x0),calc(var(--y0) - 20px),0) translateX(-50%) scale(1.15);opacity:1}75%{opacity:1}100%{transform:translate3d(var(--x0),calc(var(--y0) - 70px),0) translateX(-50%) scale(1);opacity:0}}
+.m-roll{display:inline-block;animation:m-rollp .9s var(--m-spring)}
+@keyframes m-rollp{0%{transform:scale(1)}20%{transform:scale(1.18)}100%{transform:scale(1)}}
+.paypill.m-pop{animation:m-pop .45s var(--m-spring)}
+
+/* ---------- reduced motion: instant or a short fade only ---------- */
+@media (prefers-reduced-motion:reduce){
+  .view.m-vr,.view.m-vl,.view.m-vf,.m-spr,.m-row,.bkrem,.qgrid.m-inr,.qgrid.m-inl,#pksheet.show .sheetwin,.toast.show,.wanted{animation:m-fade .12s linear both!important;transform:none!important}
+  .qd.m-pop,.paypill.m-pop,.m-roll,mark:after,.m-rip,.m-sky i,.hdr .hdr-body:after{animation:none!important}
+  mark:after,.m-rip,#mfx{display:none}
+  .rbtn:active,.tab:active,.chipbtn:active,.paypill:active,.qd:active,.menubar a:active,.tbx:active,.crewbtn:active,.icoopt:active{transform:none}
+}
+/* layout isolation: a re-rendered panel doesn't relayout its neighbours */
+.qcal,.qsum,.qday,.lp-sum{contain:layout}

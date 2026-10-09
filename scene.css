@@ -1,0 +1,135 @@
+/* v5 scene elements (see scene.js). Only transform + opacity animate. */
+.sc{pointer-events:none}
+.sc i,.sc b,.sc span{display:block;position:absolute}
+.sc img{display:block;width:100%;height:auto;user-select:none}
+/* Rates header: the painted window comes alive */
+.hdr .hdr-body{position:relative}
+.hdr .hdr-body>*:not(.sc):not(.g-sky){position:relative;z-index:1}
+.sc-hdr{position:absolute!important;inset:0;overflow:hidden;z-index:0;contain:strict}
+.sc-hdr~.g-sky .cld,.hdr-body:has(.sc-hdr) .g-sky .cld{display:none}
+.sc-vb{left:0;top:0;width:400px;height:140px;transform-origin:0 0}
+.sc-winv{left:0;top:0;width:400px;height:140px}
+.sc-cl{left:0;will-change:transform;animation:sc-drift 80s linear infinite}
+.sc-winv .sc-cl{--x0:100px;--x1:290px}
+@keyframes sc-drift{from{transform:translate3d(var(--x0,-130px),0,0)}to{transform:translate3d(var(--x1,400px),0,0)}}
+.sc-train{left:0;width:24px;will-change:transform;--x0:300px;--x1:100px;animation:sc-train 26s linear infinite}
+.sc-train.band{width:30px;--x0:-40px;--x1:400px;animation-duration:34s;animation-delay:-12s}
+@keyframes sc-train{0%{transform:translate3d(var(--x0),0,0)}62%{transform:translate3d(var(--x1),0,0)}100%{transform:translate3d(var(--x1),0,0)}}
+.sc-cur{width:18px;transform-origin:50% 0}
+.sc-cur span{width:100%;transform-origin:50% 0;will-change:transform;animation:sc-curt 4.6s ease-in-out infinite}
+.sc-cur.r span{animation-delay:-2.1s;animation-duration:5.2s}
+@keyframes sc-curt{0%,100%{transform:rotate(0) scaleX(1)}30%{transform:rotate(2.6deg) scaleX(1.06)}55%{transform:rotate(.6deg) scaleX(.97)}78%{transform:rotate(3.4deg) scaleX(1.04)}}
+.sc-beams{left:212px;top:6px;width:120px;height:150px;transform:rotate(28deg);transform-origin:0 0}
+.sc-beams b{top:0;width:16px;height:150px;background:linear-gradient(180deg,rgba(255,246,214,.55),rgba(255,240,200,.18) 60%,rgba(255,240,200,0));opacity:.5;will-change:opacity;animation:sc-beam 7s ease-in-out infinite}
+@keyframes sc-beam{0%,100%{opacity:.22}50%{opacity:.62}}
+.sc-mote{width:2.2px;height:2.2px;border-radius:50%;background:#fff6d8;box-shadow:0 0 3px 1px rgba(255,240,190,.7);opacity:0;will-change:transform,opacity;animation:sc-mote 9s ease-in-out infinite}
+@keyframes sc-mote{0%{opacity:0;transform:translate3d(0,0,0)}20%{opacity:.95}50%{transform:translate3d(9px,-7px,0);opacity:.5}80%{opacity:.9}100%{opacity:0;transform:translate3d(16px,-2px,0)}}
+.sc-ff{width:3px;height:3px;border-radius:50%;background:#efffa8;box-shadow:0 0 6px 2.5px rgba(214,255,130,.7);opacity:0;will-change:transform,opacity;animation:sc-ff 7s ease-in-out infinite}
+@keyframes sc-ff{0%{opacity:0;transform:translate3d(0,0,0)}25%{opacity:1}50%{transform:translate3d(10px,-12px,0);opacity:.35}75%{opacity:1}100%{opacity:0;transform:translate3d(-6px,-22px,0)}}
+.sc-wisp{width:14px;height:18px;will-change:transform,opacity;animation:sc-wisp 10s ease-in-out infinite}
+.sc-wisp b{inset:0;border-radius:50% 50% 46% 46%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 60%,rgba(236,255,250,.95),rgba(150,236,224,.55) 38%,rgba(120,210,220,0) 70%)}
+.sc-wisp:after{content:"";position:absolute;left:5px;top:13px;width:4px;height:12px;border-radius:50%;background:linear-gradient(rgba(170,240,230,.5),rgba(170,240,230,0))}
+@keyframes sc-wisp{0%,100%{transform:translate3d(0,0,0) scale(1);opacity:.35}30%{transform:translate3d(10px,-8px,0) scale(1.08);opacity:.9}60%{transform:translate3d(-4px,-15px,0) scale(.94);opacity:.55}}
+.sc-lglow{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle,rgba(255,206,120,.55),rgba(255,170,90,0) 70%);will-change:opacity;animation:sc-flick 2.8s ease-in-out infinite}
+@keyframes sc-flick{0%,100%{opacity:.55}20%{opacity:.9}45%{opacity:.62}60%{opacity:1}80%{opacity:.7}}
+/* ward cat: breathes, tail swishes, every ~18 s a big stretch */
+.sc-cat{width:46px;height:34px}
+.sc-catin{inset:0;transform-origin:30% 100%;will-change:transform;animation:sc-stretch 18s ease-in-out infinite}
+.sc-cb{left:0;bottom:0;width:46px;transform-origin:50% 100%;will-change:transform;animation:sc-breathe 3.6s ease-in-out infinite}
+.sc-ch{left:-6px;bottom:6px;width:20px;transform-origin:70% 90%;will-change:transform;animation:sc-head 18s ease-in-out infinite}
+.sc-ct{left:30px;bottom:2px;width:22px;transform-origin:0 80%;will-change:transform;animation:sc-tail 5.5s ease-in-out infinite}
+.sc-z{left:2px;top:-6px;font:700 9px/1 var(--px,sans-serif);color:#8fb6c8;opacity:0;will-change:transform,opacity;animation:sc-z 4s ease-out infinite}
+.sc-z.z2{animation-delay:-2s;font-size:7px}
+@keyframes sc-breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.045)}}
+@keyframes sc-tail{0%,100%{transform:rotate(0)}40%{transform:rotate(-9deg)}55%{transform:rotate(-3deg)}70%{transform:rotate(-12deg)}}
+@keyframes sc-stretch{0%,76%,100%{transform:none}82%{transform:scale(1.14,.9) translate3d(-2px,0,0)}88%{transform:scale(1.16,.88) translate3d(-3px,0,0)}94%{transform:scale(.98,1.02)}}
+@keyframes sc-head{0%,76%,100%{transform:none}82%{transform:translate3d(-3px,-4px,0) rotate(-14deg)}88%{transform:translate3d(-4px,-5px,0) rotate(-18deg)}94%{transform:rotate(2deg)}}
+@keyframes sc-z{0%{opacity:0;transform:translate3d(0,0,0) scale(.6)}25%{opacity:.9}100%{opacity:0;transform:translate3d(-8px,-14px,0) scale(1.1)}}
+/* tea mug + steam */
+.sc-mug{width:16px;height:30px}
+.sc-mugi{position:absolute;left:0;bottom:0}
+.sc-st{position:absolute;left:3px;bottom:11px;width:6px!important;opacity:0;transform-origin:50% 100%;will-change:transform,opacity;animation:sc-steam 3.6s ease-out infinite}
+.sc-st.s2{left:6px;animation-delay:-1.2s}.sc-st.s3{left:1px;animation-delay:-2.4s}
+@keyframes sc-steam{0%{opacity:0;transform:translate3d(0,4px,0) scale(.7,.6)}30%{opacity:.75}100%{opacity:0;transform:translate3d(2px,-12px,0) scale(1.3,1.25)}}
+/* grass + laundry + lanterns sway (inner element loops; the .sc-gw wrapper only bends during a gust) */
+.sc-gw{transform-origin:50% 100%}
+.sc-grass{width:40px}
+.sc-grass img{transform-origin:50% 100%;will-change:transform;animation:sc-sway 3.8s ease-in-out infinite alternate}
+@keyframes sc-sway{from{transform:skewX(-5deg)}to{transform:skewX(7deg)}}
+.sc-ln,.sc-lan,.sc-cur{transform-origin:50% 0}
+.sc-ln{width:18px}.sc-ln span{width:100%;transform-origin:50% 0;will-change:transform;animation:sc-flap 2.8s ease-in-out infinite}
+@keyframes sc-flap{0%,100%{transform:rotate(-2deg) skewX(0)}35%{transform:rotate(5deg) skewX(-7deg)}60%{transform:rotate(1deg) skewX(3deg)}80%{transform:rotate(6deg) skewX(-4deg)}}
+.sc-lan{width:13px}.sc-lan span{width:100%;transform-origin:50% 0;will-change:transform;animation:sc-lsw 4.2s ease-in-out infinite}
+.sc-lan .sc-glow,.sc-rise .sc-glow{left:-12px;top:0;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,110,.6),rgba(255,160,80,0) 70%);will-change:opacity;animation:sc-flick 2.6s ease-in-out infinite}
+@keyframes sc-lsw{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+html.sc-gust .sc-gw{animation:sc-gustb 1.3s cubic-bezier(.2,.7,.3,1)}
+html.sc-gust .sc-cur,html.sc-gust .sc-ln,html.sc-gust .sc-lan{animation-name:sc-gustc}
+@keyframes sc-gustb{0%{transform:none}25%{transform:skewX(calc(var(--gd,1) * 16deg))}60%{transform:skewX(calc(var(--gd,1) * -5deg))}100%{transform:none}}
+@keyframes sc-gustc{0%{transform:none}25%{transform:rotate(calc(var(--gd,1) * -16deg)) scaleX(1.1)}55%{transform:rotate(calc(var(--gd,1) * 6deg))}100%{transform:none}}
+/* view bands with hand-lettered titles */
+.sc-band{position:relative!important;height:64px;margin:0 0 8px;border-radius:14px;overflow:hidden;border:1.5px solid var(--line-d,#3a4a50);contain:paint}
+.sc-sky{inset:0;background:linear-gradient(180deg,#bfe0ef,#e7f1e4 70%,#f6efd9)}
+[data-theme=dark] .sc-sky{background:linear-gradient(180deg,#0e1a33,#1d3150 70%,#26385a)}
+.sc-hills{left:0;right:0;bottom:0;height:40px}.sc-hills img{width:100%;height:40px;object-fit:cover}
+.sc-band .sc-cl{--x0:-80px;--x1:390px}
+.sc-band .sc-cur{width:20px}
+.sc-desk{left:auto;right:0;bottom:0;width:130px;height:15px;z-index:1;background:linear-gradient(#7ab0a3,#5c8f84);border-top:1.5px solid #3f6a60;border-radius:6px 0 0 0}
+[data-theme=dark] .sc-desk{background:linear-gradient(#2f5550,#24413e);border-color:#4f7a70}
+.sc-rope{left:140px;right:0;top:8px;height:8px;border-top:1px solid #8a6a4e;border-radius:50%/0 0 100% 100%;opacity:.85}
+[data-theme=dark] .sc-rope{border-color:#6a6070}
+.sc-band .sc-beams{left:250px;top:-10px;height:90px}.sc-band .sc-beams b{height:90px}
+.sc-title{left:12px;top:10px;display:flex!important;font-family:var(--title,var(--px,cursive));font-size:27px;line-height:1;color:#3f2c1e;text-shadow:0 1px 0 rgba(255,255,255,.7),0 0 8px rgba(255,250,235,.9);white-space:nowrap}
+[data-theme=dark] .sc-title{color:#f5e6c4;text-shadow:0 1px 0 rgba(0,0,0,.65),0 0 3px rgba(8,16,34,.95),0 0 6px rgba(8,16,34,.9),0 0 12px rgba(10,20,40,.9)}
+.sc-title span{position:relative!important;display:inline-block!important}.sc-title .sp{width:.28em}
+.sc-brush{position:absolute;left:-2px;bottom:-7px;width:100%!important;height:8px!important;opacity:.85}
+/* Shop item stage / Wardrobe room backdrop: a painted meadow behind the doctor */
+.wd-room,.sh-stage{position:relative;overflow:hidden}
+.sc-bd{position:absolute!important;inset:0;z-index:0;overflow:hidden;opacity:.9}
+[data-theme=dark] .sc-bd{opacity:.75}
+.wd-room>*:not(.sc-bd),.sh-stage>*:not(.sc-bd){position:relative;z-index:1}
+.sh-stage>.sh-burst{position:absolute}
+.sc-bd .sc-cl{--x0:-120px;--x1:380px}
+.sc-hills.big{left:0;right:0;bottom:0;height:46%}.sc-hills.big img{height:100%;object-fit:cover}
+/* empty states */
+.sc-nap{position:relative!important;width:100px;height:44px;margin:0 auto 6px}
+/* moments */
+#sc-fx{position:fixed;inset:0;pointer-events:none;z-index:9450;overflow:hidden;contain:strict}
+.sc-leaf{position:absolute;width:12px;height:7px;border-radius:0 80% 0 80%;opacity:0;will-change:transform,opacity;animation:sc-leaf 1.5s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes sc-leaf{0%{opacity:0;transform:translate3d(0,0,0) rotate(0)}15%{opacity:1}100%{opacity:0;transform:translate3d(var(--tx),var(--ty),0) rotate(var(--r))}}
+.sc-rise{position:absolute;bottom:-40px;width:24px;opacity:0;will-change:transform,opacity;animation:sc-rise 3.2s ease-out forwards}
+.sc-rise img{width:100%}
+@keyframes sc-rise{0%{opacity:0;transform:translate3d(0,0,0) rotate(-4deg)}15%{opacity:1}70%{opacity:.9}100%{opacity:0;transform:translate3d(10px,-300px,0) rotate(5deg)}}
+/* paper grain over everything (static) */
+#sc-grain{position:fixed;inset:0;pointer-events:none;z-index:9300;background-size:256px 256px;opacity:.11}
+[data-theme=dark] #sc-grain{opacity:.075}
+/* mascot coat hem + hair in the wind (crew.js clones the sprite into two clipped strips) */
+#crewmate .cm-hem,#crewmate .cm-hair{position:absolute;left:0;top:0;will-change:transform}
+#crewmate .cm-hem{animation:cm-hem 3.1s ease-in-out infinite;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 72%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 72%,transparent)}
+#crewmate .cm-hair{animation:cm-hairw 3.7s ease-in-out infinite;-webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent)}
+@keyframes cm-hem{0%,100%{transform:skewX(0)}35%{transform:skewX(-3.2deg)}65%{transform:skewX(1.6deg)}}
+@keyframes cm-hairw{0%,100%{transform:rotate(0)}40%{transform:rotate(-2.2deg)}70%{transform:rotate(1deg)}}
+html.sc-gust #crewmate .cm-hem{animation:cm-hemg 1.3s cubic-bezier(.2,.7,.3,1)}
+html.sc-gust #crewmate .cm-hair{animation:cm-hairg 1.3s cubic-bezier(.2,.7,.3,1)}
+@keyframes cm-hemg{25%{transform:skewX(calc(var(--gd,1) * -9deg))}60%{transform:skewX(calc(var(--gd,1) * 3deg))}}
+@keyframes cm-hairg{25%{transform:rotate(calc(var(--gd,1) * 5deg))}60%{transform:rotate(calc(var(--gd,1) * -1deg))}}
+/* pause when idle / hidden / during transitions; static for reduced motion */
+html.m-idle #crewmate .cm-hem,html.m-idle #crewmate .cm-hair,html.cm-rest #crewmate .cm-hem,html.cm-rest #crewmate .cm-hair{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){.sc *,#sc-fx *,#crewmate .cm-hem,#crewmate .cm-hair{animation:none!important}.sc-mote,.sc-ff{opacity:.6}.sc-st{opacity:.45}.sc-z{opacity:.7}.sc-cl{transform:translate3d(var(--x0),0,0)}.sc-winv .sc-cl{transform:translate3d(150px,0,0)}.sc-train{opacity:0}#sc-fx{display:none}}
+/* cat asleep on top of the title sign, tea beside it */
+.hdr .hdr-txt{position:relative}
+.sc-perch{position:absolute!important;left:0;right:0;top:-30px;height:32px;z-index:2}
+.view .sc-band{height:66px!important;min-height:66px;flex:none}
+.sc-station .sc-cat,.sc-station .sc-mug{z-index:2}
+.sc-station .sc-grass{display:none}
+.sc-bd{background:linear-gradient(180deg,#bfe0ef,#e7f1e4 62%,#f6efd9)}
+[data-theme=dark] .sc-bd{background:linear-gradient(180deg,#0e1a33,#1d3150 62%,#26385a)}
+/* tab-switch gust: painted leaves on a curved path, fluttering */
+.sc-gl{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity;animation:sc-gl 1.4s cubic-bezier(.35,.55,.45,1) forwards}
+.sc-gl img{display:block;width:100%;will-change:transform;animation:sc-flut .42s ease-in-out infinite alternate}
+@keyframes sc-gl{0%{opacity:0;transform:translate3d(var(--x0),var(--y0),0)}12%{opacity:1}50%{transform:translate3d(var(--xm),var(--ym),0)}88%{opacity:1}100%{opacity:0;transform:translate3d(var(--x1),var(--y1),0)}}
+@keyframes sc-flut{from{transform:rotate(-30deg) scaleY(1)}to{transform:rotate(40deg) scaleY(-.6)}}
+li.srchead .sc-nap{margin:4px auto 4px}
+.sc-station .sc-train{display:none}
+/* v2.0.0: night band titles get a soft ink wash behind them so they stay AA-readable over bright clouds / lanterns */
+[data-theme=dark] .sc-title{isolation:isolate}
+[data-theme=dark] .sc-title::before{content:"";position:absolute;left:-12px;right:-14px;top:-7px;bottom:-8px;z-index:-1;border-radius:40%;background:radial-gradient(closest-side,rgba(8,16,34,.62),rgba(8,16,34,.38) 70%,rgba(8,16,34,0));pointer-events:none}

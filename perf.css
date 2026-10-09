@@ -1,0 +1,29 @@
+/* PHILHEALTH KING v2.1.1 smoothness layer (loaded last). Same look, cheaper frames, for 90/120 Hz phones.
+   1. paper / wash textures: pre-rendered tiles (img/paper@2x.webp, img/wash@1x.webp) instead of live SVG feTurbulence, which the
+      browser re-rasterised for every new tile while scrolling. Same tile size and colour (alpha taken from the SVG render).
+   2. fixed page backgrounds (dark star field, day paper gradient) move from body{background-attachment:fixed} - which forced a
+      full-page repaint + re-raster on EVERY scroll frame - to one fixed, GPU-composited layer that never repaints.
+   3. ambient scene loops (fireflies, clouds, train, steam, cat, lanterns, leaves) hold still while the finger scrolls and resume
+      right after; scene pieces that are off screen are paused (perf.js). Talking doctor, bubble and emoji are not affected.
+   4. no page-wide style recalcs: the scroll / transition / idle holds, the gust direction and the view-enter offset used to be set on
+      <html> or on the whole view (re-styling ~1,500 elements, 5-7 ms each time); now they touch only the pieces that animate.
+   5. list rows are laid out once (no lazy content-visibility re-layout + repaint per row while scrolling), with the same containment.
+   6. Rates stays laid out while another tab is open (content-visibility:hidden), so switching back to it is cheaper. */
+:root{--paper:url("img/paper@2x.webp") 0 0/180px 180px;--wash:url("img/wash@1x.webp") 0 0/600px 600px}
+[data-theme=light] body{background:var(--wash),var(--paper)!important}
+[data-theme=dark] body{background:transparent!important}
+body::before{content:"";position:fixed;left:0;top:0;width:100%;height:100%;height:100lvh;z-index:-1;pointer-events:none;transform:translateZ(0);backface-visibility:hidden}
+[data-theme=light] body::before{background:linear-gradient(180deg,#f6eedc,#efe4cc)}
+[data-theme=dark] body::before{background:radial-gradient(1px 1px at 12% 22%,#fff8e0 50%,transparent),radial-gradient(1px 1px at 38% 64%,#d8e6ff 50%,transparent),radial-gradient(1.3px 1.3px at 72% 12%,#fff8e0 50%,transparent),radial-gradient(1px 1px at 88% 48%,#d8e6ff 50%,transparent),radial-gradient(1px 1px at 54% 86%,#fff8e0 50%,transparent),#000;background-size:420px 520px}
+@property --sx{syntax:"<length>";inherits:false;initial-value:0px}
+@property --i{syntax:"<number>";inherits:false;initial-value:0}
+/* scroll / transition / idle holds (classes set by perf.js on the scene containers only, see there) */
+.pk-p *,.hdr .hdr-body.pk-p:after,.pk-h.sc *,.m-sky.pk-h i,.g-sky.pk-h i,.hdr .hdr-body.pk-h:after,
+.sc.pk-off *,.g-sky.pk-off *{animation-play-state:paused!important}
+/* tab gust direction: a class targeting only the swaying pieces instead of an inherited custom property on <html> */
+html.sc-gdl .sc-gw,html.sc-gdl .sc-cur,html.sc-gdl .sc-ln,html.sc-gdl .sc-lan,html.sc-gdl #crewmate .cm-hem,html.sc-gdl #crewmate .cm-hair{--gd:-1}
+/* rows: render once instead of DisplayLock re-layout/re-paint as each row scrolls in (measured: 4x p95 16.5 -> 3.1 ms) */
+#list>.row,.lp-e,.qe,.prow{content-visibility:visible!important;contain:layout style paint}   /* same containment c-v:auto gave on-screen rows -> identical layout */
+/* Rates keeps its laid-out list while another tab is open (its DOM is reused on return), so coming back doesn't re-style and re-lay-out
+   100 rows. content-visibility:hidden = contents not rendered/painted/hit-tested; no inherited property changes, so nothing cascades on return */
+#app>#home.view:not(.active){display:block!important;content-visibility:hidden;position:absolute!important;left:0;right:0;top:0;height:0!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important;overflow:hidden}

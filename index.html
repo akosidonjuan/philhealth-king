@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#000" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="PHILHEALTH KING">
+<meta name="application-name" content="PHILHEALTH KING">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="preload" href="fonts/Fredoka-VF.latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/MPLUSRounded1c-Regular.latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/MochiyPopOne-Regular.latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<meta name="color-scheme" content="dark">
+<title>PHILHEALTH KING</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="pwa.css">
+<link rel="stylesheet" href="motion.css">
+<link rel="stylesheet" href="ghibli.css">
+<link rel="stylesheet" href="scene.css">
+<link rel="stylesheet" href="crew2.css">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="perf.css">
+<script>try{var t=localStorage.getItem("pk_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body>
+<div id="app">
+  <!-- HOME -->
+  <section id="home" class="view active">
+    <div class="topdock">
+      <div class="win hdr">
+        <div class="tb"><span class="tb-t">Case Rates</span><span class="tb-btns"><button class="tbx thm" id="themeBtn" aria-label="Toggle light/dark">&#9790;</button></span></div>
+        <div class="hdr-body"><span class="logo-slot" data-ico="strawhat"></span><span class="hdr-txt"><span class="hdr-name pk-title">PHILHEALTH KING</span><span class="byline">EYE &amp; ENT case rates · by Dr. Juan Carlo Navarrete</span></span><button class="crewbtn" id="crewBtn" aria-label="Choose doctor"><span class="crewface"></span><span>Doctor</span></button></div>
+      </div>
+      <div id="catmenu" class="catmenu" role="tablist"></div>
+      <div class="searchrow">
+        <input id="q" type="search" placeholder="Search any part: nas, h669, tonsil…" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button id="scope" class="rbtn sm" title="Search scope">All</button>
+        <button id="clearQ" class="rbtn sm" aria-label="Clear search">Clear</button>
+      </div>
+      <div id="chips" class="tabsrow" role="tablist"></div>
+    </div>
+    <div class="win inv">
+      <div class="tb"><span class="tb-t" id="count">Inventory</span><span class="tb-btns" aria-hidden="true"><i>_</i></span></div>
+      <ul id="list" class="list"></ul>
+    </div>
+  </section>
+
+  <!-- DETAIL (item description popup) -->
+  <section id="detail" class="view">
+    <div class="win popup">
+      <div class="tb"><span class="tb-t" id="dTitle">Item</span><span class="tb-btns"><button class="tbx" data-back aria-label="Close">x</button></span></div>
+      <div id="dBody" class="wbody"></div>
+    </div>
+  </section>
+
+  <!-- CALCULATOR (trade window) -->
+  <section id="calc" class="view">
+    <div class="win">
+      <div class="tb"><span class="tb-t">Claim Calculator</span><span class="tb-btns" aria-hidden="true"><i>_</i><i>x</i></span></div>
+      <div id="calcBody" class="wbody"></div>
+    </div>
+  </section>
+
+  <!-- LOG POSE (PF log with location) -->
+  <section id="log" class="view">
+    <div id="logBody"></div>
+  </section>
+
+  <!-- CREW PICKER -->
+  <!-- QUEST (procedure calendar) -->
+  <section id="quest" class="view">
+    <div id="questBody"></div>
+  </section>
+  <section id="locked" class="view"></section>
+  <section id="places" class="view"><div id="placesBody"></div></section>
+  <section id="crew" class="view">
+    <div class="win">
+      <div class="tb"><span class="tb-t">Choose your Doctor</span><span class="tb-btns"><button class="tbx" data-back aria-label="Close">x</button></span></div>
+      <div id="crewBody" class="wbody"></div>
+    </div>
+  </section>
+
+  <!-- RULES (NPC dialogue) -->
+  <section id="rules" class="view">
+    <div id="rulesBody"></div>
+  </section>
+
+  <!-- ABOUT (basic info window) -->
+  <section id="about" class="view">
+    <div class="win">
+      <div class="tb"><span class="tb-t">About this Ward</span><span class="tb-btns" aria-hidden="true"><i>_</i><i>x</i></span></div>
+      <div id="aboutBody" class="wbody"></div>
+    </div>
+  </section>
+  <section id="welcome" class="view"><div id="welcomeBody"></div></section>
+</div>
+<nav id="tabs" class="menubar">
+  <a href="#/" data-tab="home"><span class="slot" data-ico="jolly"></span><span class="ml">Rates</span></a>
+  <a href="#/calc" data-tab="calc"><span class="slot" data-ico="coins"></span><span class="ml">Calc</span></a>
+  <a href="#/quest" data-tab="quest"><span class="slot" data-ico="qmap"></span><span class="ml">Quest</span></a>
+  <a href="#/log" data-tab="log"><span class="slot" data-ico="logpose"></span><span class="ml">Log Pose</span></a>
+  <a href="#/about" data-tab="about"><span class="slot" data-ico="strawhat"></span><span class="ml">About</span></a>
+</nav>
+<div id="toast" class="toast"></div>
+<script>window.APP_VERSION="2.1.2";</script>
+<script src="config.js"></script>
+<script src="migrate.js"></script>
+<script src="icons.js"></script>
+<script src="ghibli-icons.js"></script>
+<script src="store.js"></script>
+<script src="lock.js"></script>
+<script src="app.js"></script>
+<script src="quest.js"></script>
+<script src="log.js"></script>
+<script src="places.js"></script>
+<script src="crew-art.js"></script>
+<script src="paint.js"></script>
+<script src="crew.js"></script>
+<script src="pwa.js"></script>
+<script src="perf.js"></script>
+<script src="motion.js"></script>
+<script src="ghibli.js"></script>
+<script src="scene-baked.js"></script>
+<script src="scene.js"></script>
+<script src="sync.js"></script>
+<script src="widget.js"></script>
+</body>
+</html>

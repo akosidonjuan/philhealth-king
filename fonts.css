@@ -1,0 +1,15 @@
+/* PHILHEALTH KING v2.1.0 type (option A, chosen by JC): free OFL fonts with a soft, rounded, hand-made storybook feel, bundled offline
+   (Latin subsets, woff2): Mochiy Pop One (big titles) + Fredoka (labels, tabs, bubble, numbers) + M PLUS Rounded 1c (body, PF amounts).
+   The peso sign comes from M PLUS Rounded 1c (the others have no U+20B1). Licences: fonts/OFL-*.txt */
+@font-face{font-family:"PK Peso";src:url("fonts/MPLUSRounded1c-Bold.peso.woff2") format("woff2");unicode-range:U+20B1;font-display:swap}
+@font-face{font-family:"Fredoka UI";src:url("fonts/Fredoka-VF.latin.woff2") format("woff2");font-weight:500 700;font-stretch:100%;font-display:swap;size-adjust:88%}
+@font-face{font-family:"MPRounded UI";src:url("fonts/MPLUSRounded1c-Regular.latin.woff2") format("woff2");font-weight:100 500;font-display:swap;size-adjust:97%}
+@font-face{font-family:"MPRounded UI";src:url("fonts/MPLUSRounded1c-Bold.latin.woff2") format("woff2");font-weight:600 900;font-display:swap;size-adjust:97%}
+@font-face{font-family:"Mochiy UI";src:url("fonts/MochiyPopOne-Regular.latin.woff2") format("woff2");font-weight:100 900;font-display:swap;size-adjust:80%}
+:root,html[data-font=totoro]{--px:"Fredoka UI","PK Peso",cursive;--body:"MPRounded UI","PK Peso",system-ui,sans-serif;--title:"Mochiy UI","PK Peso","Fredoka UI",cursive}
+.pk-title,.q-title,.wl-t,.crewcard .cc-n{font-family:var(--title)!important}
+.pk-title{letter-spacing:.5px!important}
+.pk-title{white-space:nowrap}
+html:not([data-font]) .pk-title,html[data-font=totoro] .pk-title{font-size:22px!important;letter-spacing:.2px!important;word-spacing:4px}
+.sc-title{font-family:var(--title)!important;font-size:24px!important}
+.sc-title .sp{width:.34em!important}

@@ -1,0 +1,22 @@
+/* PHILHEALTH KING PWA (iOS) overrides: safe areas, no input zoom, standalone polish. Loaded after style.css + theme.css. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#000}
+body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:calc(74px + env(safe-area-inset-bottom));-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+/* notch / Dynamic Island: push the sticky header and every view below the status bar */
+.view{padding-top:calc(8px + env(safe-area-inset-top))}
+#home.view{padding-top:8px}
+.topdock{padding-top:calc(8px + env(safe-area-inset-top))}
+/* home bar: menubar sits above it; keep 6px gutters but respect landscape side insets */
+.menubar{left:calc(6px + env(safe-area-inset-left));right:calc(6px + env(safe-area-inset-right));bottom:calc(6px + env(safe-area-inset-bottom));margin-bottom:0}
+.toast{bottom:calc(80px + env(safe-area-inset-bottom))}
+/* iOS Safari zooms the page when a focused field is < 16px */
+#q,.picker input,select{font-size:16px}
+.iosHint{position:fixed;left:calc(10px + env(safe-area-inset-left));right:calc(10px + env(safe-area-inset-right));bottom:calc(76px + env(safe-area-inset-bottom));z-index:25;font-size:14px;line-height:1.4;color:var(--ink);background:linear-gradient(var(--win),var(--win2));border:1px solid var(--line-d);border-radius:4px;padding:8px 34px 8px 10px;box-shadow:0 2px 0 rgba(0,0,0,.5)}
+.iosHint b{font-family:var(--px);font-size:17px;font-weight:400;color:var(--id)}
+.iosHint button{position:absolute;right:6px;top:6px}
+/* opaque strip under the home indicator so list rows don't show through below the menubar */
+body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(6px + env(safe-area-inset-bottom));background:#000;z-index:9;pointer-events:none}
+/* PHILHEALTH KING extras: forms don't zoom, mascot / sheets / PIN respect the home indicator */
+input,select,textarea{font-size:16px}
+#crewmate{bottom:calc(64px + env(safe-area-inset-bottom))}
+#pksheet{padding-bottom:env(safe-area-inset-bottom)}
+#pklock{padding-top:calc(16px + env(safe-area-inset-top));padding-bottom:calc(16px + env(safe-area-inset-bottom))}
