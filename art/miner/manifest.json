@@ -1,0 +1,12 @@
+{
+  "name": "Cici the Legendary PhilHealth Miner",
+  "idle": "hero/run-sheet.webp",
+  "idleStill": "hero/hero-still.webp",
+  "actions": {
+    "claims": { "sheet": "anim/claims-sheet.webp", "still": "anim/claims-still.webp", "frames": 12, "cell": 320, "cells": 13, "delayMs": 100, "durationMs": 1200 },
+    "mining": { "sheet": "anim/mining-sheet.webp", "still": "anim/mining-still.webp", "frames": 12, "cell": 320, "cells": 13, "delayMs": 100, "durationMs": 1200 },
+    "stand":  { "sheet": "anim/stand-sheet.webp",  "still": "anim/stand-still.webp",  "frames": 12, "cell": 320, "cells": 13, "delayMs": 100, "durationMs": 1200 },
+    "hotdog": { "sheet": "anim/hotdog-sheet.webp", "still": "anim/hotdog-still.webp", "frames": 12, "cell": 320, "cells": 13, "delayMs": 100, "durationMs": 1200 }
+  },
+  "notes": "GIF 5 is byte-identical to the existing run-source GIF; idle stays the registered CSS run sheet. Feet registered to (160, 305) in 320 space."
+}

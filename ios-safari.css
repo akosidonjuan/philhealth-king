@@ -1,0 +1,32 @@
+/* PHILHEALTH KING iOS / Safari delay preview.
+   Tap readiness + Safari paint workarounds. Does not change layout, colors, or data. */
+
+html, body {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.menubar,
+.menubar a,
+.rbtn,
+.tab,
+.chipbtn,
+.paypill,
+.cat,
+.chip,
+.syncchip,
+button,
+a,
+#crewdock .cd-doc,
+.crewdock .cd-doc {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safari support for content-visibility is late and can delay the first paint
+   when a hidden view becomes .active. Keep the Chromium speed-pass rule; turn
+   it off on iOS / iPadOS (and other WebKit touch browsers). */
+@supports (-webkit-touch-callout: none) {
+  #app > .view:not(.active):not(#home) {
+    content-visibility: visible;
+  }
+}

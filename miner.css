@@ -1,0 +1,428 @@
+/* Cici the Legendary PhilHealth Miner — preview avatar (transform/opacity only).
+   Idle is the hand-drawn 16-frame run loop on a CSS sprite sheet (steps(), compositor).
+   Duration is 16 frames × 10 vsyncs at 120 Hz = 4/3 s, even at 60 and 120 Hz.
+   JC's four uploaded loops (claims, mining, stand, hotdog) are 12-frame strips
+   at 12 ticks of 120 Hz = 1200 ms, registered to the same 320 feet line.
+   GIF 5 is byte-identical to the existing run source and is not a second idle.
+   Slot sits on the left of the home banner. No overall translateY bob. */
+
+#crewdock .cd-doc{
+  position:relative; width:100%; height:100%;
+  --foot-nudge: 0px;
+  --ledge-h: 26px;
+  --ledge-surf: 0.6032;
+  --lamp-x: 60%;
+  --lamp-y: 28%;
+  overflow:visible;
+  transform-style:preserve-3d;
+}
+
+/* ---- Crystal / earth ledge: surface pinned to the foot baseline ---- */
+#crewdock .cd-ledge{
+  position:absolute;
+  left:-22%;
+  width:144%;
+  height:var(--ledge-h);
+  /* Surface sits on the foot line; the mound hangs just below. */
+  bottom:calc(var(--foot-nudge) - (1 - var(--ledge-surf)) * var(--ledge-h));
+  z-index:1;
+  pointer-events:none;
+  overflow:visible;
+  transform:translateZ(0);
+}
+#crewdock .cd-ledge-img{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:fill;
+  pointer-events:none;
+  display:block;
+}
+#crewdock .cd-ledge-night{ display:none; }
+[data-theme=dark] #crewdock .cd-ledge-day{ display:none; }
+[data-theme=dark] #crewdock .cd-ledge-night{ display:block; }
+
+/* Subtle dirt grain scrolling under the standing surface (run only, compositor). */
+#crewdock .cd-ground-tex{
+  position:absolute;
+  left:0;
+  top:calc(var(--ledge-surf) * 100%);
+  height:28%;
+  width:200%;
+  background:url("art/miner/ground/tex.webp") left top / auto 100% repeat-x;
+  opacity:0;
+  pointer-events:none;
+  will-change:transform;
+  transform:translate3d(0,0,0);
+  mask-image:linear-gradient(90deg, transparent 6%, #000 18%, #000 82%, transparent 94%);
+  -webkit-mask-image:linear-gradient(90deg, transparent 6%, #000 18%, #000 82%, transparent 94%);
+}
+#crewdock.is-ready[data-act=idle] .cd-ground-tex,
+#crewdock.is-ready:not([data-act]) .cd-ground-tex,
+#crewdock.is-ready[data-act=run] .cd-ground-tex{
+  opacity:.28;
+  animation:miner-tex-scroll calc(16 * 10 / 120 * 1s * 2) linear infinite;
+}
+@keyframes miner-tex-scroll{
+  from{ transform:translate3d(0,0,0); }
+  to{ transform:translate3d(-50%,0,0); }
+}
+
+/* Contact shadow — squashes / lightens in lockstep with the registered run. */
+#crewdock .cd-shadow,
+#home #crewdock .cd-shadow,
+body:not([data-view=home]) #crewdock .cd-shadow{
+  position:absolute;
+  left:22% !important;
+  right:22% !important;
+  height:7px !important;
+  bottom:calc(var(--foot-nudge) - 1px) !important;
+  z-index:2;
+  pointer-events:none;
+  border-radius:50%;
+  background:radial-gradient(closest-side, rgba(40,24,10,.58), rgba(40,24,10,.2) 58%, transparent 74%) !important;
+  filter:blur(.55px) !important;
+  transform:scaleX(1) translateZ(0);
+  transform-origin:50% 50%;
+  opacity:.72;
+  will-change:transform, opacity;
+}
+[data-theme=dark] #crewdock .cd-shadow,
+[data-theme=dark] #home #crewdock .cd-shadow{
+  background:radial-gradient(closest-side, rgba(0,0,0,.65), rgba(0,0,0,.24) 58%, transparent 74%) !important;
+}
+#crewdock.is-ready[data-act=idle] .cd-shadow,
+#crewdock.is-ready:not([data-act]) .cd-shadow,
+#crewdock.is-ready[data-act=run] .cd-shadow{
+  animation:miner-shadow calc(16 * 10 / 120 * 1s) steps(1, end) infinite;
+}
+@keyframes miner-shadow{
+  0.000%{ transform:scaleX(0.786); opacity:0.370; }
+  6.250%{ transform:scaleX(0.758); opacity:0.345; }
+  12.500%{ transform:scaleX(0.730); opacity:0.320; }
+  18.750%{ transform:scaleX(0.730); opacity:0.320; }
+  25.000%{ transform:scaleX(0.927); opacity:0.495; }
+  31.250%{ transform:scaleX(0.955); opacity:0.520; }
+  37.500%{ transform:scaleX(0.955); opacity:0.520; }
+  43.750%{ transform:scaleX(0.955); opacity:0.520; }
+  50.000%{ transform:scaleX(1.040); opacity:0.595; }
+  56.250%{ transform:scaleX(1.067); opacity:0.620; }
+  62.500%{ transform:scaleX(1.011); opacity:0.570; }
+  68.750%{ transform:scaleX(1.011); opacity:0.570; }
+  75.000%{ transform:scaleX(1.152); opacity:0.695; }
+  81.250%{ transform:scaleX(1.180); opacity:0.720; }
+  87.500%{ transform:scaleX(1.180); opacity:0.720; }
+  93.750%{ transform:scaleX(1.124); opacity:0.670; }
+  100%{ transform:scaleX(0.786); opacity:0.370; }
+}
+
+/* Dust puffs at footfalls (frames ~6 and 12–14 of the run). */
+#crewdock .cd-dust{
+  position:absolute;
+  left:18%; right:18%;
+  bottom:calc(var(--foot-nudge) + 1px);
+  height:10px;
+  z-index:4;
+  pointer-events:none;
+  overflow:visible;
+}
+#crewdock .cd-dust i{
+  position:absolute;
+  bottom:0;
+  width:5px; height:5px;
+  border-radius:50%;
+  background:rgba(180,140,80,.5);
+  opacity:0;
+  transform:scale(.3) translateZ(0);
+  will-change:transform, opacity;
+}
+#crewdock .cd-dust i:first-child{ left:28%; }
+#crewdock .cd-dust i:last-child{ right:28%; }
+#crewdock.is-ready[data-act=idle] .cd-dust i,
+#crewdock.is-ready:not([data-act]) .cd-dust i,
+#crewdock.is-ready[data-act=run] .cd-dust i{
+  animation:miner-dust calc(16 * 10 / 120 * 1s) linear infinite;
+}
+#crewdock.is-ready[data-act=idle] .cd-dust i:last-child,
+#crewdock.is-ready:not([data-act]) .cd-dust i:last-child,
+#crewdock.is-ready[data-act=run] .cd-dust i:last-child{
+  animation-delay:calc(16 * 10 / 120 * 1s * 0.38);
+}
+@keyframes miner-dust{
+  0%,72%{ opacity:0; transform:scale(.3) translate3d(0,0,0); }
+  76%{ opacity:.55; transform:scale(1.05) translate3d(-1px,-2px,0); }
+  84%{ opacity:.2; transform:scale(1.25) translate3d(-2px,-4px,0); }
+  90%,100%{ opacity:0; transform:scale(.4) translate3d(-2px,-5px,0); }
+}
+
+/* ---- Rig: character viewport, feet on the ledge surface ---- */
+#crewdock .cd-rig{
+  position:absolute;
+  left:0; right:0; top:0;
+  bottom:var(--foot-nudge);
+  z-index:3;
+  pointer-events:none;
+  transform-origin:50% 100%;
+  perspective:420px;
+  transform:translateZ(0);
+  will-change:transform;
+  backface-visibility:hidden;
+}
+#crewdock .cd-stage{
+  position:absolute; inset:0;
+  display:block;
+  pointer-events:none;
+  transform:translateZ(0);
+  will-change:transform;
+  backface-visibility:hidden;
+}
+#crewdock .cd-img{
+  position:absolute; inset:0;
+  width:100% !important; height:100% !important;
+  object-fit:contain;
+  object-position:center bottom;
+  pointer-events:none;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  opacity:0;
+  /* Stills are replaced by the rig / run strip. */
+  transition:none;
+}
+
+/* Hide the legacy still pair; the run strip and expression rig are the visible art. */
+#crewdock .cd-img,
+#crewdock[data-act] .cd-img,
+#crewdock[data-act=idle] .cd-img,
+#crewdock:not([data-act]) .cd-img,
+#crewdock[data-act=run] .cd-img{
+  opacity:0 !important;
+}
+
+/* ---- Idle run: one decoded sprite strip, stepped on the compositor ---- */
+#crewdock .cd-run{
+  position:absolute; inset:0;
+  z-index:2;
+  pointer-events:none;
+  opacity:0;
+  transition:none;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+}
+#crewdock.is-ready[data-act=idle] .cd-run,
+#crewdock.is-ready:not([data-act]) .cd-run,
+#crewdock.is-ready[data-act=run] .cd-run{
+  opacity:1;
+}
+#crewdock.is-emote .cd-run,
+#crewdock.is-ready.is-emote .cd-run{
+  opacity:0;
+}
+#crewdock .cd-run-vp{
+  position:absolute; inset:0;
+  overflow:hidden;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  transform-origin:50% 100%;
+}
+#crewdock .cd-run-strip{
+  position:absolute; top:0; left:0;
+  height:100%;
+  width:1700%; /* 17 cells: 16 unique + duplicate of frame 0 for a seamless seam */
+  will-change:transform;
+  backface-visibility:hidden;
+  transform:translate3d(0,0,0);
+  /* 16 frames × 10 ticks at 120 Hz = 1333.333 ms. Also 16 × 5 ticks at 60 Hz.
+     Original GIF was 16 × 80 ms (1280 ms); 83.33 ms is the nearest even vsync hold. */
+  animation:miner-run-loop calc(16 * 10 / 120 * 1s) steps(16, end) infinite;
+}
+#crewdock .cd-run-strip img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  pointer-events:none;
+  transform:translateZ(0);
+}
+@keyframes miner-run-loop{
+  from{ transform:translate3d(0,0,0); }
+  to{ transform:translate3d(calc(-100% * 16 / 17),0,0); }
+}
+
+/* ---- Registered 12-frame action strips (claims / mining / stand / hotdog) ---- */
+#crewdock .cd-anim{
+  position:absolute; inset:0;
+  z-index:3;
+  pointer-events:none;
+  opacity:0;
+  transition:none;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+}
+#crewdock.is-emote[data-act=claims] .cd-anim[data-anim=claims],
+#crewdock.is-emote[data-act=mining] .cd-anim[data-anim=mining],
+#crewdock.is-emote[data-act=stand] .cd-anim[data-anim=stand],
+#crewdock.is-emote[data-act=eat] .cd-anim[data-anim=hotdog]{
+  opacity:1;
+}
+#crewdock .cd-anim-vp{
+  position:absolute; inset:0;
+  overflow:hidden;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  transform-origin:50% 100%;
+}
+#crewdock .cd-anim-strip{
+  position:absolute; top:0; left:0;
+  height:100%;
+  width:1300%; /* 13 cells: 12 unique + duplicate of frame 0 for a seamless wrap */
+  will-change:transform;
+  backface-visibility:hidden;
+  transform:translate3d(0,0,0);
+  /* 12 frames × 12 ticks at 120 Hz = 1200 ms. Also 12 × 6 ticks at 60 Hz.
+     Source GIFs are 12 × 100 ms; 100 ms is an exact 60/120 Hz hold. */
+  animation:miner-anim-loop calc(12 * 12 / 120 * 1s) steps(12, end) infinite;
+}
+#crewdock .cd-anim-strip img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  pointer-events:none;
+  transform:translateZ(0);
+}
+@keyframes miner-anim-loop{
+  from{ transform:translate3d(0,0,0); }
+  to{ transform:translate3d(calc(-100% * 12 / 13),0,0); }
+}
+
+/* Pause compositor work when the tab is hidden, the avatar is offscreen, or a form has taken over.
+   Pausing mid-cycle (not restarting) keeps the loop seam even when we resume. */
+html.cici-paused #crewdock .cd-stage,
+html.cici-paused #crewdock .cd-img,
+html.cici-paused #crewdock .cd-run-strip,
+html.cici-paused #crewdock .cd-run-vp,
+html.cici-paused #crewdock .cd-anim-strip,
+html.cici-paused #crewdock .cd-anim-vp,
+html.cici-paused #crewdock .cd-rig,
+html.cici-paused #crewdock .cd-shadow,
+html.cici-paused #crewdock .cd-dust i,
+html.cici-paused #crewdock .cd-ground-tex,
+#crewdock.is-offscreen .cd-run-strip,
+#crewdock.is-offscreen .cd-run-vp,
+#crewdock.is-offscreen .cd-anim-strip,
+#crewdock.is-offscreen .cd-anim-vp,
+#crewdock.is-offscreen .cd-shadow,
+#crewdock.is-offscreen .cd-dust i,
+#crewdock.is-offscreen .cd-ground-tex,
+#crewdock.away .cd-stage,
+#crewdock.away .cd-run-strip,
+#crewdock.away .cd-run-vp,
+#crewdock.away .cd-anim-strip,
+#crewdock.away .cd-anim-vp,
+#crewdock.away .cd-rig,
+#crewdock.away .cd-shadow,
+#crewdock.away .cd-dust i,
+#crewdock.away .cd-ground-tex{
+  animation-play-state:paused !important;
+}
+
+@media (prefers-reduced-motion:reduce){
+  #crewdock .cd-stage, #crewdock .cd-img,
+  #crewdock[data-act] .cd-stage,
+  #crewdock .cd-run-strip,
+  #crewdock .cd-run-vp,
+  #crewdock .cd-anim-strip,
+  #crewdock .cd-anim-vp,
+  #crewdock .cd-rig,
+  #crewdock .cd-shadow,
+  #crewdock .cd-dust i,
+  #crewdock .cd-ground-tex,
+  #crewdock[data-act] .cd-rig{
+    animation:none !important;
+    transition:opacity .01s !important;
+  }
+  /* animation:none on the strip leaves it on frame 0 — the still pose.
+     Ledge and a planted contact shadow stay so he remains grounded. */
+  #crewdock .cd-shadow{
+    transform:scaleX(1.18) !important;
+    opacity:.72 !important;
+  }
+  #crewdock .cd-ground-tex, #crewdock .cd-dust i{ opacity:0 !important; }
+  #crewdock .cd-rig{ transform:none !important; }
+}
+
+/* ---- Home banner: Cici replaces the app-icon spot on the LEFT ---- */
+#home .logo-slot{
+  display:none !important;
+  width:0 !important; height:0 !important;
+  margin:0 !important; flex:none !important;
+}
+/* Replace the old soft grass tuft — the crystal ledge is the ground now. */
+#home .cici-slot.cici-slot-home::before{ content:none !important; display:none !important; }
+/* Neutralize the old drop-shadow that made him read as floating. */
+#home #crewdock .cd-img,
+#home #crewdock .cd-run-strip img,
+#home #crewdock .cd-anim-strip img{
+  filter:none;
+}
+#home .win.hdr .hdr-body{
+  gap:4px !important;
+}
+/* Recover nameplate width: the 36px right pad was for the perched cat; at narrow
+   widths it was clipping the byline after the icon slot grew for the miner. */
+#home .hdr-txt{ padding:5px 16px 6px 10px !important; }
+#home .win.hdr .hdr-body > .cici-slot.cici-slot-home,
+#home .cici-slot.cici-slot-home{
+  position:relative !important;
+  top:auto !important; right:auto !important; left:auto !important; bottom:auto !important;
+  flex:0 0 80px !important;
+  width:80px !important; height:90px !important;
+  max-width:80px !important; max-height:90px !important;
+  align-self:flex-end !important;
+  margin:0 0 -2px 0 !important;
+  z-index:5;
+  background:none !important;
+  overflow:visible !important;
+  pointer-events:none;
+}
+#home .cici-slot.cici-slot-home .cd-doc{ pointer-events:auto; }
+#home .cici-slot.cici-slot-home #crewdock,
+#home .cici-slot.cici-slot-home .cd-doc{
+  width:100% !important; height:100% !important;
+  max-width:none; max-height:none;
+}
+/* Talk bubble lives in the window, to the RIGHT of left-side Cici, below the toolbar. */
+#home .topdock > .cici-talkbar,
+#home .cici-talkbar{
+  left:100px !important;
+  right:14px !important;
+  top:42px !important;
+}
+
+@media (min-width:720px) and (max-height:740px){
+  #home .win.hdr .hdr-body > .cici-slot.cici-slot-home,
+  #home .cici-slot.cici-slot-home{
+    flex-basis:72px !important;
+    width:72px !important; height:82px !important;
+    max-width:72px !important; max-height:82px !important;
+  }
+  #home .cd-doc{ --ledge-h: 22px; }
+  #home .hdr-txt{ padding:5px 12px 6px 8px !important; }
+  #home .topdock > .cici-talkbar, #home .cici-talkbar{ left:90px !important; right:10px !important; }
+}
+@media (min-width:560px) and (min-height:741px){
+  #home .win.hdr .hdr-body > .cici-slot.cici-slot-home,
+  #home .cici-slot.cici-slot-home{
+    flex-basis:96px !important;
+    width:96px !important; height:104px !important;
+    max-width:96px !important; max-height:104px !important;
+  }
+  #home .cd-doc{ --ledge-h: 32px; }
+  #home .hdr-txt{ padding:5px 36px 6px 12px !important; }
+  #home .topdock > .cici-talkbar, #home .cici-talkbar{ left:118px !important; }
+}
+
+/* About mini + welcome */
+.crewmini img, .wl-cici{
+  object-fit:contain; object-position:center bottom;
+  border-radius:10px;
+}
