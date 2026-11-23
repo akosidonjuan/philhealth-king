@@ -1,0 +1,2 @@
+/* GENERATED from config/google-oauth.json by tools/gen_config.py - edit that file, not this one. */
+window.PK_CONFIG = {"webClientId": "451594500535-1buhi0eb416c7m864ggjhnprsi0t0j7s.apps.googleusercontent.com", "androidClientId": "451594500535-seunfmih042q5glfh6354lv21609nidu.apps.googleusercontent.com", "pagesUrl": "https://akosidonjuan.github.io/philhealth-king/", "driveScope": "https://www.googleapis.com/auth/drive.appdata"};

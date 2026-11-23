@@ -1,0 +1,93 @@
+/* PHILHEALTH KING speed-pass (preview on 2.2.0): instant avatar swaps, clip the
+   Rates toolbar so banner art / Cici / leaves cannot cover "Case Rates", and
+   keep the Sync chip from colliding with the title at any width. */
+
+/* Banner art, leaves and Cici may not paint into the 32px toolbar. */
+#home .win.hdr .hdr-body{
+  overflow:hidden !important;
+}
+#home .win.hdr .meadow-fx,
+#home .win.hdr .meadow-paint{
+  top:32px !important;
+  bottom:0 !important;
+  left:0 !important;
+  right:0 !important;
+  inset:auto 0 0 0 !important;
+}
+
+/* Title + Sync chip + theme stay on one reserved flex row. */
+#home .win.hdr .tb{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between;
+  gap:8px !important;
+  position:relative !important;
+  z-index:8 !important;
+  isolation:isolate;
+  height:32px !important;
+  min-height:32px;
+  flex-shrink:0;
+  box-sizing:border-box;
+}
+#home .win.hdr .tb-t{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  position:relative;
+  z-index:2;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+#home .win.hdr .tb-btns{
+  display:flex !important;
+  align-items:center;
+  gap:6px;
+  flex:0 1 auto;
+  min-width:0;
+  margin-left:auto;
+  z-index:3;
+  position:relative;
+}
+#home .win.hdr #syncChip,
+#home .win.hdr a.syncchip,
+#home .win.hdr .syncchip{
+  max-width:min(168px, 42vw);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex:0 1 auto;
+}
+
+/* Tight / landscape: shrink the chip before it can sit on the title. */
+@media (max-width:420px){
+  #home .win.hdr #syncChip,
+  #home .win.hdr a.syncchip{ max-width:96px; }
+}
+@media (min-width:720px) and (max-height:740px){
+  #home .win.hdr #syncChip,
+  #home .win.hdr a.syncchip{ max-width:120px; }
+}
+
+/* Instant hard swap: no crossfade on run <-> action strips. */
+#crewdock .cd-run, .crewdock .cd-run,
+#crewdock .cd-anim, .crewdock .cd-anim{
+  transition:none !important;
+}
+
+/* Pre-stacked clones stay in their slots; only the live one is visible. */
+.crewdock.is-parked{
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+.crewdock.is-parked .cd-run-strip,
+.crewdock.is-parked .cd-anim-strip,
+.crewdock.is-parked .cd-ground-tex,
+.crewdock.is-parked .cd-dust i,
+.crewdock.is-parked .cd-shadow{
+  animation-play-state:paused !important;
+}
+
+/* Offscreen views: don't paint (Rates already has a special rule in perf.css). */
+#app > .view:not(.active):not(#home){
+  content-visibility:hidden;
+}

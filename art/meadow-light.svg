@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7EB6E6"/>
+      <stop offset=".55" stop-color="#B9D9F3"/>
+      <stop offset="1" stop-color="#FFF8E6"/>
+    </linearGradient>
+    <linearGradient id="h1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5C9A62"/>
+      <stop offset="1" stop-color="#1B5E3B"/>
+    </linearGradient>
+    <linearGradient id="h2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7BC47F"/>
+      <stop offset="1" stop-color="#2E7A4A"/>
+    </linearGradient>
+    <filter id="w" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="3" seed="4"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.95  0 0 0 0 0.92  0 0 0 0 0.82  0 0 0 .18 -0.05"/>
+    </filter>
+  </defs>
+  <rect width="800" height="240" fill="url(#sky)"/>
+  <rect width="800" height="240" filter="url(#w)" opacity=".45"/>
+  <circle cx="640" cy="52" r="34" fill="#FFC857" opacity=".95"/>
+  <circle cx="640" cy="52" r="48" fill="#FFC857" opacity=".22"/>
+  <ellipse cx="180" cy="70" rx="70" ry="22" fill="#fff" opacity=".72"/>
+  <ellipse cx="230" cy="78" rx="48" ry="16" fill="#fff" opacity=".55"/>
+  <ellipse cx="420" cy="48" rx="60" ry="18" fill="#fff" opacity=".5"/>
+  <path d="M-20 168C80 130 180 148 280 136c90-10 160 18 260 8 90-10 180 16 280-4v100H-20z" fill="url(#h1)" opacity=".9"/>
+  <path d="M-20 198C60 170 150 186 250 176c110-10 170 20 300 6 80-8 170 14 270 0v58H-20z" fill="url(#h2)"/>
+  <path d="M-20 214C80 200 200 220 340 208c120-10 200 12 480 2v30H-20z" fill="#1B5E3B"/>
+  <g fill="#FFC857" opacity=".9">
+    <circle cx="70" cy="200" r="3"/><circle cx="90" cy="208" r="2.4"/><circle cx="150" cy="196" r="2.6"/>
+    <circle cx="320" cy="204" r="2.5"/><circle cx="510" cy="198" r="2.2"/><circle cx="700" cy="206" r="2.8"/>
+  </g>
+  <g fill="#FFF8E6" opacity=".8">
+    <circle cx="110" cy="204" r="2"/><circle cx="400" cy="200" r="2.2"/><circle cx="620" cy="208" r="1.8"/>
+  </g>
+</svg>

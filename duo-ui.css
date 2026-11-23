@@ -1,0 +1,400 @@
+/* PHILHEALTH KING Duo / foldable UI preview (v2.2.2 base).
+   Layout only: one shared content+tab column, Log Pose cards/chips that
+   fit the real iPhone Duo viewports, safe-area insets applied once.
+   Sizes (Safari 27.1 / WebKit, DPR 3):
+     folded portrait  382×580 svh / 618 lvh   (outer 466×678, 84pt side rail)
+     folded landscape 594×368 / 406
+     unfolded portrait  669×867 / 902
+     unfolded landscape 951×585 / 620
+     split view         385×571 / 609
+   Presentation only. */
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+/* Named page container tracks the in-flow ICB (not the media-query viewport).
+   The menubar lives outside #app, so it cannot query #app. */
+html {
+  container-type: inline-size;
+  container-name: pk-page;
+}
+#app {
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.view,
+.win,
+.lp-home,
+.lp-list,
+.lp-tools,
+.lp-sum,
+.deal,
+.md-grid,
+#list {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Content and tab bar share one column with equal 12px gutters.
+   On folded iPhone Duo, Safari's in-flow ICB is already 382 CSS px
+   (the 84pt status rail is outside the page), but env(safe-area-inset-right)
+   can still be 84px and position:fixed is resolved against the full 466 pt
+   screen. Adding that 84px to .view padding double-counts the rail and
+   leaves a ~86px void (content ~286px, tab bar to the rail). In-flow
+   boxes therefore use only a 12px gutter; the fixed tab bar still adds
+   the safe-area so it stays on the same 382-wide column. Standalone
+   466-wide ICB (Home Screen PWA) applies the inset to both. */
+.view {
+  padding-left: var(--pk-gutter-left, 12px);
+  padding-right: var(--pk-gutter-right, 12px);
+}
+.menubar {
+  left: 12px !important;
+  right: calc(12px + env(safe-area-inset-right, 0px)) !important;
+  max-width: none;
+  width: auto;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+/* Home Screen / standalone folded: the tab bar may still be
+   position:fixed against a 466pt screen (right: 84, ends at the
+   rail / x=382) while the in-flow ICB is already 382 and
+   env(safe-area-inset-right) is still 84. Never add that inset to
+   .view — pk-duo-align.js sets --pk-gutter-* from the menubar rect
+   against #app's in-flow width. The fallback stays 12px. The
+   menubar may still use the inset so it stops at the rail when the
+   ICB really is ~466 (rail overlays the page). */
+@container pk-page (min-width: 450px) and (max-width: 500px) {
+  .view {
+    padding-left: var(--pk-gutter-left, 12px);
+    padding-right: var(--pk-gutter-right, 12px);
+  }
+  .menubar {
+    left: 12px !important;
+    right: max(12px, env(safe-area-inset-right, 0px)) !important;
+  }
+}
+
+/* Standalone (Home Screen PWA): same rule even if the container
+   query does not match. html.standalone is set by pwa.js. */
+@media (display-mode: standalone) {
+  .view {
+    padding-left: var(--pk-gutter-left, 12px);
+    padding-right: var(--pk-gutter-right, 12px);
+  }
+}
+html.standalone .view {
+  padding-left: var(--pk-gutter-left, 12px);
+  padding-right: var(--pk-gutter-right, 12px);
+}
+
+/* Unfolded landscape and other short-wide screens: side rail.
+   Body already clears 88px for the rail (passport.css); keep the view's
+   12px inner gutter and do not add the safe-area again. */
+@media (min-width: 720px) and (max-height: 740px) {
+  body {
+    padding-left: calc(88px + env(safe-area-inset-left, 0px));
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+  .view {
+    padding-left: 12px;
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  .menubar {
+    left: env(safe-area-inset-left, 0px) !important;
+    right: auto !important;
+    top: env(safe-area-inset-top, 0px) !important;
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+    width: 84px !important;
+    max-width: none;
+    margin: 0 !important;
+  }
+}
+
+/* Very wide desktops: same cap as meadow.css #app, same 24px inset. */
+@media (min-width: 1200px) {
+  .menubar {
+    max-width: 1440px;
+    left: max(24px, env(safe-area-inset-left, 0px)) !important;
+    right: max(24px, env(safe-area-inset-right, 0px)) !important;
+  }
+}
+
+/* Log Pose: one full-width column until the list can stay ~400px+ wide.
+   Covers folded 382/466, split 385, and unfolded portrait 669.
+   Two columns only from 900px in a tall portrait pose. */
+@media (min-width: 560px) and (min-aspect-ratio: 7/10) {
+  .lp-home {
+    display: flex !important;
+    flex-direction: column;
+    grid-template-columns: none !important;
+    gap: 10px;
+    max-width: 100%;
+    width: 100%;
+  }
+  .lp-home > .lp-hero,
+  .lp-home > .lp-cal,
+  .lp-home > .lp-sum,
+  .lp-home > .lp-tools,
+  .lp-home > .lp-dayhd,
+  .lp-home > .lp-list,
+  .lp-home > .hint,
+  .lp-home > .lp-foot,
+  .lp-home > .lp-more,
+  .lp-home > .disc {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+  .lp-home > .lp-cal {
+    position: static !important;
+    max-height: none;
+  }
+}
+
+@media (min-width: 900px) and (min-aspect-ratio: 7/10) {
+  .lp-home {
+    display: grid !important;
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) !important;
+    gap: 12px 16px;
+    align-items: start;
+  }
+  .lp-home > .lp-hero { grid-column: 1 / -1 !important; }
+  .lp-home > .lp-cal {
+    grid-column: 1 !important;
+    grid-row: 2 / span 8 !important;
+    position: sticky !important;
+    top: 8px;
+  }
+  .lp-home > .lp-sum,
+  .lp-home > .lp-tools,
+  .lp-home > .lp-dayhd,
+  .lp-home > .lp-list,
+  .lp-home > .hint,
+  .lp-home > .lp-foot,
+  .lp-home > .lp-more,
+  .lp-home > .disc {
+    grid-column: 2 !important;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 720px) and (max-height: 740px) {
+  .lp-home {
+    display: flex !important;
+    flex-direction: column;
+    grid-template-columns: none !important;
+  }
+  .lp-home > .lp-cal { position: static !important; max-height: none; }
+}
+
+/* Procedure cards: icon | text | fee. No overlapping initials. */
+.lp-e,
+.lp-sel {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: 8px;
+  row-gap: 2px;
+  align-items: start;
+  padding: 10px 10px !important;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+.lp-e > .lp-ico,
+.lp-e > .iico,
+.lp-e > .slot {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+}
+.lp-ico {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 28px;
+}
+.lp-ico .iico,
+.lp-ico .slot {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+}
+.lp-m {
+  grid-column: 2;
+  min-width: 0;
+  max-width: 100%;
+}
+.lp-pf {
+  grid-column: 3;
+  align-self: start;
+  justify-self: end;
+  min-width: 5.75em;
+  max-width: 8.5em;
+  width: auto;
+  white-space: nowrap;
+  text-align: right;
+  line-height: 1.25;
+}
+.lp-pf .lp-an,
+.lp-pf .pdt,
+.lp-pf .udt {
+  display: block;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+.lp-code {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  line-height: 1.25;
+  min-width: 0;
+}
+.lp-code .ini,
+.lp-code .ini.sm {
+  margin-left: 0 !important;
+  vertical-align: middle;
+  flex: 0 0 auto;
+  position: static;
+  /* theme.css .ini is min-width:44px; the sm chip must stay compact */
+  min-width: 0;
+}
+.lp-d {
+  margin-top: 4px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
+  line-height: 1.35;
+  white-space: normal;
+}
+.lp-w {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+}
+
+.lp-pay b,
+.lp-v,
+.lp-an b {
+  white-space: nowrap;
+}
+
+/* Filter chips: never clip or overlap. 2×2 by default whenever four
+   labels cannot fit (folded 382, a 286px Safari column, split 385).
+   Four-across only when the row is comfortably wide. */
+.lp-tools .tabsrow.lp-f,
+.tabsrow.lp-f,
+.lp-f {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow: visible;
+  width: 100%;
+  max-width: 100%;
+  border-bottom: 0 !important;
+  padding: 0;
+}
+.lp-f .tab {
+  flex: 1 1 calc(50% - 6px);
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 !important;
+  top: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px !important;
+  font-size: 12px !important;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 999px !important;
+}
+@media (min-width: 520px) {
+  .lp-f .tab { flex: 1 1 calc(25% - 6px); }
+}
+
+/* Folded portrait (and split 385): tighten card gutters so the fee
+   column and name share the ~358px content width without overlap. */
+@media (max-width: 430px) {
+  .lp-e,
+  .lp-sel {
+    column-gap: 6px;
+    padding: 10px 8px !important;
+  }
+  .lp-pf {
+    min-width: 5.5em;
+    max-width: 7.6em;
+  }
+  .lp-d { line-height: 1.3; }
+}
+
+/* Folded landscape is very short (594×368). Keep the tab bar at the
+   bottom (width < 720) and leave enough scroll clearance. */
+@media (max-height: 430px) {
+  .view, #home.view.active {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* Unfolded landscape: the meadow column is only ~260–340px, so a 3-up
+   dashboard card grid clips titles like "Claim Calculator". Use 2-up. */
+@media (min-width: 720px) and (max-height: 740px) {
+  #home .md-grid { grid-template-columns: 1fr 1fr !important; }
+}
+
+/* Signed-in only widgets (Google Identity iframes, longer Sync chip, 100vw
+   toasts) must not widen the page. On iOS / WebKit, any horizontal overflow
+   can trigger shrink-to-fit, which scales the content down and leaves a wide
+   gap next to the fixed tab bar. Signed-out has no such widget, so it looks
+   fine. Use 100% (the ICB), never 100vw. */
+iframe[src*="accounts.google"],
+iframe[src*="google.com/gsi"],
+iframe[src*="recaptcha"],
+#credential_picker_container,
+div[id^="gsi_"] {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+#app > #home.view:not(.active) {
+  max-width: 100% !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.syncchip {
+  min-width: 0;
+  max-width: min(168px, 42vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.toast,
+.toast.show,
+.toast.pin-nudge {
+  max-width: min(420px, calc(100% - 24px)) !important;
+  width: auto;
+  box-sizing: border-box;
+}
+

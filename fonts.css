@@ -1,0 +1,43 @@
+/* PHILHEALTH KING v2.2.0 type: Baloo 2 (banner title), Nunito (UI text),
+   M PLUS Rounded 1c (peso sign). SIL Open Font License 1.1; licences in fonts/OFL-*.txt */
+@font-face{font-family:"PK Peso";src:url("fonts/MPLUSRounded1c-Bold.peso.woff2") format("woff2");unicode-range:U+20B1;font-display:swap}
+@font-face{font-family:"MPRounded UI";src:url("fonts/MPLUSRounded1c-Regular.latin.woff2") format("woff2");font-weight:100 500;font-display:swap;size-adjust:97%}
+@font-face{font-family:"MPRounded UI";src:url("fonts/MPLUSRounded1c-Bold.latin.woff2") format("woff2");font-weight:600 900;font-display:swap;size-adjust:97%}
+@font-face{font-family:"Nunito UI";src:url("fonts/Nunito-VariableFont_wght.ttf") format("truetype");font-weight:200 900;font-display:swap}
+@font-face{font-family:"Baloo 2";src:url("fonts/Baloo2-VF.latin.ttf") format("truetype");font-weight:400 800;font-display:swap}
+:root,html[data-font=totoro],html[data-font=meadow]{
+  --px:"Nunito UI","PK Peso",system-ui,sans-serif;
+  --body:"Nunito UI","PK Peso",system-ui,sans-serif;
+  --title:"Nunito UI","PK Peso",system-ui,sans-serif;
+  --display:"Baloo 2","Nunito UI","PK Peso",system-ui,sans-serif;
+  /* Display wordmark sizes against the nameplate (cqi), not the viewport. */
+  --fs-display:clamp(18px, 11.2cqi, 28px);
+  --fs-h1:clamp(18px, 1.1vw + 14px, 24px);
+  --fs-h2:clamp(15px, .5vw + 13px, 18px);
+  --fs-h3:13px;
+  --fs-body:clamp(13px, .25vw + 12.2px, 15px);
+  --fs-sub:clamp(11px, .2vw + 10.4px, 13px);
+  --fs-tab:12px;
+  --fs-micro:11px;
+  --lh-tight:1.12;
+  --lh-body:1.4;
+}
+.pk-title,.q-title,.wl-t,.crewcard .cc-n,.sc-title{font-family:var(--title)!important;font-weight:800}
+.pk-title{letter-spacing:.5px!important;white-space:nowrap}
+html:not([data-font]) .pk-title,html[data-font=totoro] .pk-title,html[data-font=meadow] .pk-title{font-size:22px!important;letter-spacing:.04em!important;word-spacing:0;font-weight:800}
+.sc-title{font-size:24px!important}
+.sc-title .sp{width:.34em!important}
+#home .hdr-name.pk-title, #home .pk-title{
+  font-family:var(--display)!important;
+  font-weight:700!important;
+  /* Size against the nameplate, not the viewport, so landscape's narrow
+     left column still fits one line. Fallback if cqi is missing: 18px. */
+  font-size:18px !important;
+  font-size:clamp(18px, 11.2cqi, 28px) !important;
+  letter-spacing:.01em!important;
+  word-spacing:.04em;
+  line-height:var(--lh-tight)!important;
+  white-space:nowrap!important;
+  overflow:visible;
+  max-width:100%;
+}
